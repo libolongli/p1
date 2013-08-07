@@ -25,15 +25,30 @@
 			}		
 		}
 		//获取信息
-		public function getMessage($uid){
-			$sql = "SELECT * FROM msg_log WHERE uid={$uid}";
-			return $this->fetch_all($sql);
-			
+		public function getMessage($where,$page=1,$limit=20,$sort= " DESC"){
+			$sql = "SELECT * FROM msg_log WHERE 1=1 ";
+			if($where){
+				foreach ($where as $key => $value) {
+					$sql .= "AND {$key}={$value} ";
+				}
+			}
+
+			$limitstart = ($page-1)*$limit;
+			$sql .= " ORDER BY id {$sort} ";
+			$sql .="LIMIT ".$limitstart.",".$limit;
+			return array(
+				'data' => $this->fetch_all($sql),
+				'page' =>$page,
+				'limit' =>$limit
+			);	
 		}
+
 	}
 	
-	$msg = new msg();
-	$msg->sendMessage(1, "2,3,4,5,6", "这是一次测试");
-	echo '发送成功!';
-
+	//$msg = new msg();
+	//$msg->sendMessage(1, "2,3,4,5,6", "这是一次测试");
+	//echo '发送成功!';
+	//
+	//$data = $msg->getMessage(array('uid'=>1));
+	//print_r($data);exit;
 
