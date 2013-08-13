@@ -34,13 +34,17 @@
 					$sql .= "AND {$key}={$value} ";
 				}
 			}
-
-			$limitstart = ($page-1)*$limit;
+			
 			$sql .= " ORDER BY id {$sort} ";
-			$sql .="LIMIT ".$limitstart.",".$limit;
+			//如果指定$page 是0 则代表没有分页
+			if($page){
+				$limitstart = ($page-1)*$limit;
+				$sql .="LIMIT ".$limitstart.",".$limit;
+			}
+			
 			return array(
 				'data' => $this->fetch_all($sql),
-				'page' =>$page,
+				'page' => $page,
 				'limit' =>$limit
 			);	
 		}
